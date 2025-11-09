@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Pop Influencer Predictor</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url("{{ url_for('static', filename='bts.jpeg') }}") no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .intro-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            padding: 40px 50px;
+            text-align: center;
+            width: 480px;
+            color: white;
+            animation: fadeIn 1.2s ease-in-out;
+            z-index: 2;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(255,255,255,0.7);
+        }
+
+        p {
+            font-size: 15px;
+            color: #f1f1f1;
+            margin-bottom: 20px;
+        }
+
+        .highlight {
+            color: #ff80df;
+            font-weight: bold;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #ff4ec4, #9b2cff, #c94fff);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 25px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: gradientMove 6s ease infinite;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 💜 Continuous Floating Emoji Effect */
+        .floating-emoji {
+            position: absolute;
+            font-size: 34px;
+            opacity: 0.9;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.8));
+            animation: floatLoop linear infinite, glowPulse 3s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        /* Smooth consistent loop upward */
+        @keyframes floatLoop {
+            0% { transform: translateY(110vh); }
+            100% { transform: translateY(-20vh); }
+        }
+
+        /* Soft glow pulse */
+        @keyframes glowPulse {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(255,255,255,0.7)); }
+            50% { filter: drop-shadow(0 0 18px rgba(255,192,255,1)); }
+        }
+    </style>
+</head>
+<body>
+    <div class="intro-container">
+        <h1>💜 Influencer Popularity Predictor 💫</h1>
+        <p>
+            Welcome to the <span class="highlight">K-Pop Influencer Predictor</span> — a smart tool powered by 
+            <span class="highlight">Machine Learning</span> that predicts influencer engagement based on 
+            <span class="highlight">Subscribers</span>, <span class="highlight">Views</span>, and <span class="highlight">Videos</span>.
+        </p>
+        <p>
+            It predicts how <span class="highlight">popular</span> an influencer is — High, Medium, or Low engagement — 
+            with a 📊 Feature Comparison! 🚀
+        </p>
+
+        <!-- Buttons -->
+        <a href="/predict_page" class="start-btn">Start Prediction 🚀</a>
+        <a href="https://public.tableau.com/views/InfluencerPopularityPredictor/Sheet2?:showVizHome=yes&:embed=true" 
+           target="_blank" class="start-btn">See Insights 📊</a>
+    </div>
+
+    <script>
+        // 🎤💜🎶✨ Floating emojis that move continuously upward
+        const emojis = ["🎤", "💜", "🎶", "✨", "🎧","💜", "💫", "💜","🎵","💜", "🌟"];
+        const emojiCount = 40;
+
+        for (let i = 0; i < emojiCount; i++) {
+            const emoji = document.createElement("span");
+            emoji.classList.add("floating-emoji");
+            emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            document.body.appendChild(emoji);
+
+            const startLeft = Math.random() * 100;
+            const duration = 25 + Math.random() * 10; // slower, elegant motion
+            const delay = Math.random() * duration;   // start at random times for continuous flow
+            const startTop = Math.random() * 100;     // scatter vertically
+
+            emoji.style.left = `${startLeft}vw`;
+            emoji.style.top = `${startTop}vh`;
+            emoji.style.animationDuration = `${duration}s`;
+            emoji.style.animationDelay = `${delay}s`;
+        }
+    </script>
+</body>
+</html>

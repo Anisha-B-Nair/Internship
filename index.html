@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>K-Pop Influencer Popularity Predictor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: url("{{ url_for('static', filename='kpopimage.jpeg') }}") no-repeat center top 98% fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.35);
+    z-index: 0;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.55);
+    border-radius: 25px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    padding: 20px;
+    text-align: center;
+    width: 90%;
+    max-width: 600px;
+    transition: transform 0.3s ease;
+}
+
+.container:hover {
+    transform: scale(1.02);
+}
+
+.banner-box {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 10px 15px;
+    border-radius: 15px;
+    margin-bottom: 12px;
+}
+
+@keyframes textGlow {
+    0% { text-shadow: 0 0 5px #ff4ec4, 0 0 10px #9b2cff; }
+    50% { text-shadow: 0 0 15px #ff4ec4, 0 0 25px #9b2cff; }
+    100% { text-shadow: 0 0 5px #ff4ec4, 0 0 10px #9b2cff; }
+}
+
+@keyframes bannerPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.banner-box h2 {
+    font-size: 20px;
+    color: #fff;
+    animation: textGlow 2s infinite alternate, bannerPulse 3s infinite;
+}
+
+input {
+    width: 92%;
+    padding: 12px;
+    margin: 6px 0;
+    border-radius: 10px;
+    border: none;
+    text-align: center;
+    font-size: 16px;
+}
+
+.predict-btn, .clear-btn {
+    border: none;
+    border-radius: 50px;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: transform 0.2s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.predict-btn { 
+    width: 50%; 
+    padding: 8px 0; 
+    margin-top: 6px; 
+    background: linear-gradient(135deg, #03074d, #9b2cff, #c94fff); 
+}
+.clear-btn { 
+    width: 28%; 
+    padding: 6px 0; 
+    margin-top: 6px; 
+    background: linear-gradient(135deg, #00ffbb, #9c3c0d); 
+}
+
+.predict-btn:hover, .clear-btn:hover { 
+    transform: scale(1.08); 
+}
+
+.result-box {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    animation: pulse 2s infinite alternate, glow 2s infinite alternate, float 4s ease-in-out infinite;
+    background: linear-gradient(45deg, #4eff83, #ff2ca4, #ff6f4f, #f9ff4e);
+    background-size: 400% 400%;
+    box-shadow: 0 0 20px #ff4ec4, 0 0 40px #9b2cff;
+}
+
+.high { animation: pulse 1.5s infinite alternate, glow 2s infinite alternate; }
+.medium { background: linear-gradient(45deg, #ffc107, #ff9800, #ffb347); box-shadow: 0 0 15px #ffb347; animation: pulse 2s infinite alternate; }
+.low { background: linear-gradient(45deg, #eb0c0ccc, #d44e0b, #c71818); box-shadow: 0 0 15px #66dbff; }
+
+@keyframes pulse { from { transform: scale(1); } to { transform: scale(1.05); } }
+@keyframes glow {
+    0% { box-shadow: 0 0 20px #ff4ec4, 0 0 40px #9b2cff; }
+    50% { box-shadow: 0 0 35px #ff9fca, 0 0 70px #c94fff; }
+    100% { box-shadow: 0 0 20px #ff4ec4, 0 0 40px #9b2cff; }
+}
+@keyframes float { 0% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-5px) rotate(1deg); } 100% { transform: translateY(0) rotate(0deg); } }
+
+.comparison-box {
+    background: rgba(0,0,0,0.25);
+    border-radius: 15px;
+    margin-top: 15px;
+    padding: 10px;
+    font-size: 13px;
+}
+.comparison-box h3 { text-align: center; font-size: 15px; color: #fff; margin-bottom: 8px; }
+
+a.home-link {
+    display: inline-block; margin-top: 12px; color: #fff; text-decoration: none;
+    background: linear-gradient(135deg, #001002, #75f1ff); padding: 6px 12px; border-radius: 50px; font-size: 12px;
+}
+a.home-link:hover { background: linear-gradient(135deg, #a44eff, #2cd1ff); transform: scale(1.05); }
+
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="banner-box">
+        <h2>💜 K-Pop Influencer Popularity Predictor 💫</h2>
+    </div>
+
+    <form id="predictForm" action="/predict" method="post">
+        <input type="number" step="any" name="Subscribers" placeholder="Subscribers" required>
+        <input type="number" step="any" name="Views" placeholder="Views" required>
+        <input type="number" step="any" name="Videos" placeholder="Videos" required>
+        <input type="number" step="any" name="Avg_Views_per_Video" placeholder="Average Views per Video" required>
+        <button type="submit" class="predict-btn">Predict 🚀</button><br>
+        <button type="button" class="clear-btn" onclick="clearForm()">Clear</button>
+    </form>
+
+    {% if prediction_text %}
+    <div class="result-box 
+        {% if 'HIGH' in prediction_text %} high
+        {% elif 'MEDIUM' in prediction_text %} medium
+        {% else %} low
+        {% endif %}
+    ">
+        🌟 {{ prediction_text }} 🌟
+    </div>
+    {% endif %}
+
+    {% if comparison_data %}
+    <div class="comparison-box">
+        <h3>📊 Feature Comparison</h3>
+        <canvas id="comparisonChart" width="400" height="200"></canvas>
+    </div>
+    {% endif %}
+
+    <a href="/" class="home-link">🏠 Home</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+{% if comparison_data %}
+const ctx = document.getElementById('comparisonChart').getContext('2d');
+
+const userSubscribers = Number({{ comparison_data['user_subscribers']|float }});
+const userViews       = Number({{ comparison_data['user_views']|float }});
+const userVideos      = Number({{ comparison_data['user_videos']|float }});
+const userAvgViews    = Number({{ comparison_data['user_avg_views']|float }});
+
+const avgSubscribers  = Number({{ comparison_data['avg_subscribers']|float }});
+const avgViews        = Number({{ comparison_data['avg_views']|float }});
+const avgVideos       = Number({{ comparison_data['avg_videos']|float }});
+const avgAvgViews     = Number({{ comparison_data['avg_avg_views']|float }});
+
+let allValues = [userSubscribers, userViews, userVideos, userAvgViews, avgSubscribers, avgViews, avgVideos, avgAvgViews];
+let minVal = 0;
+let maxVal = Math.max(...allValues) * 1.1;
+
+const comparisonChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Subscribers', 'Views', 'Videos', 'Avg Views/Video'],
+        datasets: [
+            { 
+                label: 'Your Stats', 
+                data: [userSubscribers, userViews, userVideos, userAvgViews], 
+                backgroundColor: '#ff4ec4', // solid pink/purple
+                borderColor: '#fff', 
+                borderWidth: 1, 
+                borderRadius: 6 
+            },
+            { 
+                label: 'Average', 
+                data: [avgSubscribers, avgViews, avgVideos, avgAvgViews], 
+                backgroundColor: '#36a2eb', // solid blue
+                borderColor: '#fff', 
+                borderWidth: 1, 
+                borderRadius: 6 
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { labels: { color: 'white', font: { size: 14 } } },
+            tooltip: { backgroundColor: 'rgba(0,0,0,0.7)', titleColor: 'white', bodyColor: 'white' }
+        },
+        scales: {
+            y: {
+                min: minVal,
+                max: maxVal,
+                ticks: { color: 'white', font: { size: 12 }, callback: function(value){ return Number(value).toLocaleString(); } },
+                grid: { color: 'rgba(255,255,255,0.2)' }
+            },
+            x: {
+                ticks: { color: 'white', font: { size: 12 } },
+                grid: { color: 'rgba(255,255,255,0.1)' }
+            }
+        }
+    }
+});
+{% endif %}
+
+function clearForm() {
+    document.getElementById("predictForm").reset();
+    const resultBox = document.querySelector('.result-box');
+    if(resultBox) resultBox.style.display = 'none';
+    const comparisonBox = document.querySelector('.comparison-box');
+    if(comparisonBox) comparisonBox.style.display = 'none';
+}
+</script>
+</body>
+</html>
