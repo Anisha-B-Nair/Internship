@@ -16,7 +16,7 @@ Web Deployment: Integrated the trained model into a Flask web application and de
 
 🌐 Live Project
 
-🔗 Influencer Popularity Predictor – PythonAnywhere
+🔗 https://anishabnair.pythonanywhere.com/
 
 ⚙️ Technologies & Tools
 
